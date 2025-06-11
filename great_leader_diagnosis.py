@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
-# 偉人診断ツール（AIネイティブ×経営者向け）UIカスタム＋CTA追加＋ボタン装飾＋クリックログ対応版
+# 偉人診断ツール（AIネイティブ×経営者向け）Streamlit Cloud完全非表示対応版
 
 import streamlit as st
 import os
 import datetime
 
 st.set_page_config(page_title="経営者の偉人診断", layout="centered")
+
+# --- グローバルUIの非表示処理（Cloud対応） ---
 st.markdown("""
     <style>
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
+        .viewerBadge_container__1QSob {display: none !important;}
         body {
             background-color: #ffffff;
         }
@@ -94,32 +100,33 @@ def display_result(result_type):
     results = {
         "outcome": {
             "name": "スティーブ・ジョブズ",
-            "image": "img/steve_jobs.jpg",
+            "image": "steve_jobs.jpg",
             "movie": "『スティーブ・ジョブズ』（2015）",
             "description": "You are a visionary. あなたは未来を描く人です。明確な成果にこだわり、革新を形にする力があります。"
         },
         "process": {
             "name": "ヘンリー・フォード",
-            "image": "img/henry_ford.jpg",
+            "image": "henry_ford.jpg",
             "movie": "『フォードvsフェラーリ』（2019）",
             "description": "You are a builder. あなたは仕組みを整え、安定した成長を支える人です。"
         },
         "relationship": {
             "name": "マーク・ザッカーバーグ",
-            "image": "img/mark_zuckerberg.jpg",
+            "image": "mark_zuckerberg.jpg",
             "movie": "『ソーシャル・ネットワーク』（2010）",
             "description": "You are a connector. あなたは人と人とのつながりを生み出す共感力の持ち主です。"
         },
         "value": {
             "name": "ピーター・ドラッカー（象徴）",
-            "image": "img/peter_drucker.jpg",
+            "image": "peter_drucker.jpg",
             "movie": "『マネーボール』（2011）",
             "description": "You are a thinker. あなたは理念と合理を融合し、未来の意味を問い続ける人です。"
         }
     }
     result = results[result_type]
+    img_path = os.path.join("img", result["image"])
     st.subheader(f"あなたは『{result['name']}』タイプ！")
-    st.image(result["image"], width=300)
+    st.image(img_path, width=300)
     st.write(f"🎬 映画：{result['movie']}")
     st.markdown(f"<div style='font-size: 1.2rem; margin-top: 1rem;'>{result['description']}</div>", unsafe_allow_html=True)
 
@@ -156,6 +163,6 @@ if question_index < len(questions):
 else:
     result = calculate_result(st.session_state.answers)
     display_result(result)
-    if st.button("Start Over"):
+    if st.button("🔁 もう一度診断する / Start Over"):
         st.session_state.answers = []
         st.rerun()
